@@ -4,7 +4,7 @@ A Next.js based web app to browse randomly generated video clips from a director
 
 ## Usage
 1. Install dependencies with `npm install`.
-2. Place your video files inside the `videos/` directory (the folder will be created automatically on first run).
+2. Configure the video directory from the **Settings** page or by editing `config.json`. The default location is `videos/` inside the project.
 3. Run the development server with `npm run dev` and open `http://localhost:3000` in your browser.
 4. For production build run `npm run build` followed by `npm start`.
 
