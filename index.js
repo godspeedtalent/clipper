@@ -20,11 +20,13 @@ const CLIPS_TABLE = `CREATE TABLE IF NOT EXISTS clips (
   start REAL,
   end REAL,
   rating INTEGER DEFAULT 0,
-  views INTEGER DEFAULT 0
+  views INTEGER DEFAULT 0,
+  favorite INTEGER DEFAULT 0
 )`;
 const db = new sqlite3.Database(DB_FILE);
 db.serialize(() => {
   db.run(CLIPS_TABLE);
+  db.run('ALTER TABLE clips ADD COLUMN favorite INTEGER DEFAULT 0', () => {});
 });
 
 function analyzeVideos() {
@@ -92,6 +94,31 @@ app.post('/watch/:id', express.json(), (req, res) => {
   const rating = watched > 25 ? 1 : watched < 5 ? -1 : 0;
   db.run('UPDATE clips SET views = views + 1, rating = rating + ? WHERE id = ?', [rating, id]);
   res.end();
+});
+
+app.post('/ignore/:id', (req, res) => {
+  const id = req.params.id;
+  db.run('DELETE FROM clips WHERE id = ?', [id], err => {
+    if (err) return res.status(500).send(err.toString());
+    res.end();
+  });
+});
+
+app.post('/rate/:id', express.json(), (req, res) => {
+  const id = req.params.id;
+  const delta = parseInt(req.body.delta, 10) || 0;
+  db.run('UPDATE clips SET rating = rating + ? WHERE id = ?', [delta * 5, id], err => {
+    if (err) return res.status(500).send(err.toString());
+    res.end();
+  });
+});
+
+app.post('/favorite/:id', (req, res) => {
+  const id = req.params.id;
+  db.run('UPDATE clips SET favorite = 1 - favorite WHERE id = ?', [id], err => {
+    if (err) return res.status(500).send(err.toString());
+    res.end();
+  });
 });
 
 const PORT = 3000;

@@ -30,10 +30,16 @@
   <div>
     <button id="play">Play Random</button>
     <button id="skip">Skip</button>
+    <button id="ignore">Ignore</button>
+    <button id="like">👍</button>
+    <button id="dislike">👎</button>
+    <button id="favorite">⭐</button>
   </div>
 <script>
 let currentId = null;
 const player = document.getElementById('player');
+let hasRated = false;
+let ratingDelta = 0;
 
 async function loadRandom() {
   const res = await fetch('/random');
@@ -41,17 +47,45 @@ async function loadRandom() {
   currentId = clip.id;
   player.src = `/clip/${clip.id}`;
   player.play();
+  hasRated = false;
+  ratingDelta = 0;
 }
 
 document.getElementById('play').onclick = loadRandom;
 
 document.getElementById('skip').onclick = () => {
   fetch(`/watch/${currentId}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({watched: player.currentTime})});
+  if (ratingDelta !== 0) {
+    fetch(`/rate/${currentId}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({delta: ratingDelta})});
+  }
   loadRandom();
+};
+
+document.getElementById('ignore').onclick = () => {
+  fetch(`/ignore/${currentId}`, {method: 'POST'}).then(loadRandom);
+};
+
+document.getElementById('like').onclick = () => {
+  if (hasRated) return;
+  hasRated = true;
+  ratingDelta = 1;
+};
+
+document.getElementById('dislike').onclick = () => {
+  if (hasRated) return;
+  hasRated = true;
+  ratingDelta = -1;
+};
+
+document.getElementById('favorite').onclick = () => {
+  fetch(`/favorite/${currentId}`, {method: 'POST'});
 };
 
 player.onended = () => {
   fetch(`/watch/${currentId}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({watched: player.duration})});
+  if (ratingDelta !== 0) {
+    fetch(`/rate/${currentId}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({delta: ratingDelta})});
+  }
   loadRandom();
 };
 </script>
