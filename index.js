@@ -9,6 +9,11 @@ app.use(express.static('public'));
 
 const DB_FILE = 'clips.db';
 const VIDEOS_DIR = path.join(__dirname, 'videos');
+
+// ensure the videos directory exists so readdirSync doesn't throw
+if (!fs.existsSync(VIDEOS_DIR)) {
+  fs.mkdirSync(VIDEOS_DIR, { recursive: true });
+}
 const CLIPS_TABLE = `CREATE TABLE IF NOT EXISTS clips (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   file TEXT,
