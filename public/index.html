@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Clip Player</title>
+  <style>
+    body { text-align: center; margin-top: 50px; font-family: Arial, sans-serif; }
+    button { font-size: 2em; padding: 20px 40px; margin: 20px; }
+    video { width: 80%; height: auto; }
+  </style>
+</head>
+<body>
+  <video id="player" controls></video>
+  <div>
+    <button id="play">Play Random</button>
+    <button id="skip">Skip</button>
+  </div>
+<script>
+let currentId = null;
+const player = document.getElementById('player');
+
+async function loadRandom() {
+  const res = await fetch('/random');
+  const clip = await res.json();
+  currentId = clip.id;
+  player.src = `/clip/${clip.id}`;
+  player.play();
+}
+
+document.getElementById('play').onclick = loadRandom;
+
+document.getElementById('skip').onclick = () => {
+  fetch(`/watch/${currentId}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({watched: player.currentTime})});
+  loadRandom();
+};
+
+player.onended = () => {
+  fetch(`/watch/${currentId}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({watched: player.duration})});
+  loadRandom();
+};
+</script>
+</body>
+</html>
