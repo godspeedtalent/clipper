@@ -8,7 +8,9 @@ const app = express();
 app.use(express.static('public'));
 
 const DB_FILE = 'clips.db';
-const VIDEOS_DIR = path.join(__dirname, 'videos');
+const VIDEOS_DIR = process.env.VIDEOS_DIR
+  ? path.resolve(process.env.VIDEOS_DIR)
+  : path.join(__dirname, 'videos');
 
 // ensure the videos directory exists so readdirSync doesn't throw
 if (!fs.existsSync(VIDEOS_DIR)) {

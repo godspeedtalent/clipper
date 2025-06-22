@@ -4,7 +4,7 @@ A simple local web app to browse randomly generated video clips from a directory
 
 ## Usage
 1. Install dependencies with `npm install`.
-2. Place your video files inside the `videos/` directory (the folder will be created automatically on first run).
+2. Place your video files inside the `videos/` directory or set the `VIDEOS_DIR` environment variable to a custom path (the folder will be created automatically on first run).
 3. Start the server with `npm start`.
 4. Open `http://localhost:3000` in your browser.
 
