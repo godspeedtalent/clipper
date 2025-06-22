@@ -85,6 +85,8 @@ export default function Home() {
       </div>
       <div style={{ marginTop: 20 }}>
         <Link href="/settings">Settings</Link>
+        {' | '}
+        <Link href="/manager">Video Manager</Link>
       </div>
     </div>
   );
