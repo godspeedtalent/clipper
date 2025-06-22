@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
   const videoRef = useRef(null);
@@ -38,6 +39,9 @@ export default function Home() {
       <div>
         <button onClick={loadRandom} style={{ fontSize: '2em', margin: 20 }}>Play Random</button>
         <button onClick={handleSkip} style={{ fontSize: '2em', margin: 20 }}>Skip</button>
+      </div>
+      <div style={{ marginTop: 20 }}>
+        <Link href="/settings">Settings</Link>
       </div>
     </div>
   );
