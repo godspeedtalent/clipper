@@ -11,3 +11,14 @@ A Next.js based web app to browse randomly generated video clips from a director
 Watch clips and skip with the large button. The app records how long each clip was watched and adjusts the rating. Highly rated clips are more likely to play while poorly rated ones are skipped.
 
 `ffmpeg` and `ffprobe` must be installed on your system for clip extraction.
+
+### Migration
+
+To generate database entries for existing videos without running the web
+application you can execute the migration script:
+
+```bash
+node lib/migrate.js
+```
+
+Progress is displayed for each video file and only errors are logged.
